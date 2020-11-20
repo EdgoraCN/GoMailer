@@ -4,13 +4,15 @@ FROM golang:alpine as builder
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 RUN apk update && apk add curl git bash
 
-WORKDIR /src
+WORKDIR /
 
 ENV GO111MODULE=on
 ENV GOPROXY=https://mirrors.aliyun.com/goproxy/
 #RUN git clone https://github.com/EdgoraCN/guac.git
-COPY . /src/go
-RUN cd go && go mod download && go build main.go
+#ENV CGO_ENABLED=0
+COPY . /app
+WORKDIR /app
+RUN go mod download && go build
 
 
 FROM alpine:3
@@ -23,8 +25,8 @@ RUN apk update && apk add  --no-cache  curl bash
 ENV CONFIG_PATH /app/app.yaml
 ENV LOG_LEVEL INFO
 
-COPY --from=builder /src/go/app.yaml /app/app.yaml
-COPY --from=builder /src/go/GoMailer /app/GoMailer
+COPY --from=builder /app/app.yaml /app/app.yaml
+COPY --from=builder /app/GoMailer /app/GoMailer
 
 WORKDIR /app
 
