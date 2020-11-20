@@ -115,6 +115,7 @@ type Dialer struct {
 	Port         int
 	AuthUsername string
 	AuthPassword string
+	From string
 
 	Name string
 }

@@ -115,7 +115,7 @@ func prepareMessage(endpointId int64, val map[string]string) (*gomail.Message, s
 	}
 
 	msg := gomail.NewMessage()
-	msg.SetHeader("From", msg.FormatAddress(d.AuthUsername, d.Name))
+	msg.SetHeader("From", msg.FormatAddress(d.From, d.Name))
 	rsMap := make(map[string][]string)
 	for _, r := range rs {
 		rsMap[r.ReceiverType] = append(rsMap[r.ReceiverType], r.Address)
