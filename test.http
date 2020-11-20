@@ -1,0 +1,64 @@
+# @name shortcut
+POST http://localhost:6060/api/shortcut
+Content-Type: application/json
+
+{
+    "user": {
+      "username": "mail",
+      "password": "password"
+    },
+    "app": {
+      "name": "app1",
+      "host": "app1.com",
+      "appType": "WEB"
+    },
+    "endpoint": {
+      "name": "Request a demo",
+      "dialer": {
+        "host": "smtp.exmail.qq.com",
+        "port": 465,
+        "authUsername": "app1@qq.com",
+        "authPassword": "XXXXX",
+        "from": "app1@qq.com",
+        "name": "App1 Robot"
+      },
+      "receiver": [
+        {
+          "address": "user1@qq.com",
+          "receiverType": "To"
+        },
+        {
+          "address": "user2@qq.com",
+          "receiverType": "Cc"
+        },
+        {
+          "address": "user3@qq.com",
+          "receiverType": "Bcc"
+        }
+      ],
+      "template": {
+        "contentType": "text/html",
+        "template": "<div>{{lastname}}{{firstname}}request a demo:<hr><p>Company Name{{companyname}}</p><p>Email：{{email}}</p><p>Phone：{{phonenumber}}</p><div/>"
+      },
+      "preference": {
+        "deliverStrategy": "DELIVER_IMMEDIATELY",
+        "enableReCaptcha": 0,
+        "successRedirect": "http://app1.com/success",
+        "failRedirect": "http://app1.com/fail"
+      }
+    }
+  }
+
+###
+@key = {{shortcut.response.body.$.EPKey}}
+#@key=appKey1
+
+POST http://localhost:6060/api/mail/send?EPKey={{key}}
+Content-Type: application/x-www-form-urlencoded
+
+firstname=san&lastname=zhang&companyname=abc&email=zhangsan@abc&phonenumber=198222112
+
+###
+GET http://localhost:6060/api/mail/list?uid=6&pn=1&ps=10&EPKey={{key}}
+Content-Type: application/json
+
